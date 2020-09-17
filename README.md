@@ -1,6 +1,6 @@
-## [insert project title here]
+## [Netflix & Chill]
 ### Middlebury College, Computer Science CSCI 701 (Fall 2020)
-
+By Winta Ghirmai and Elva Osorio
 ### about
 TODO: a few sentences describing your project
 
