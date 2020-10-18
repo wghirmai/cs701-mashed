@@ -1,9 +1,0 @@
-{
-  "extends": ["airbnb-base", "prettier"],
-  "env": {
-    "jest": true
-  },
-  "rules": {
-    "import/order": "off"
-  }
-}
