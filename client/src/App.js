@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import Login from "./Login.js";
 
 const App = () => {
   return (
@@ -10,6 +11,7 @@ const App = () => {
         <h1 className="App-title">Welcome to MASHED</h1>
       </header>
       <p className="App-intro">API here</p>
+      <Login> </Login>
     </div>
   );
 };
