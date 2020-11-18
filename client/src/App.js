@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
-import { getTokenFromResponse } from "./spotify";
 import "./App.css";
-import Login from "./Login.js";
 import Zipcode from "./Zipcode";
 
 const App = () => {
   // eslint-disable-next-line
   const [currentZipcodes, setZipcodes] = useState([]);
-  const [token, setToken] = useState("");
   const [myzip, setmyZip] = useState("");
   const [tempzip, settempZip] = useState(myzip ? myzip.tempzip : "");
   const [mode, setMode] = useState("view");
-  useEffect(() => {
-    const hash = getTokenFromResponse();
-    setToken(hash.access_token);
-    //window.location.hash="";
-    console.log("My Access Token:", token);
-  }, [token]);
 
   useEffect(() => {
     fetch("/")
@@ -71,7 +62,6 @@ const App = () => {
       </header>
       {newZipcode}
       {saveButton}
-      {token ? <h1 className="App-title">Logged in</h1> : <Login />}
     </div>
   );
 };
