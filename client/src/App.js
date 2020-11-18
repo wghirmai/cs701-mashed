@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
-import styled from "styled-components";
-
+import { getTokenFromResponse } from "./spotify";
 import "./App.css";
 import Login from "./Login.js";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import axios from "axios";
 import Zipcode from "./Zipcode";
 
-const Title = styled.h1`
-  text-align: center;
-`;
-const Button = styled.button``;
-
 const App = () => {
-  const [currentZipcode, setZipcode] = useState(" ");
+  // eslint-disable-next-line
   const [currentZipcodes, setZipcodes] = useState([]);
+  const [token, setToken] = useState("");
   const [myzip, setmyZip] = useState("");
   const [tempzip, settempZip] = useState(myzip ? myzip.tempzip : "");
   const [mode, setMode] = useState("view");
+  useEffect(() => {
+    const hash = getTokenFromResponse();
+    setToken(hash.access_token);
+    //window.location.hash="";
+    console.log("My Access Token:", token);
+  }, [token]);
 
   useEffect(() => {
     fetch("/")
@@ -34,13 +33,10 @@ const App = () => {
       .catch(err => console.log(err)); // eslint-disable-line no-console
   }, []);
 
-  //Zipcode Function here
-  const handleZipcodeReturn = newZipcode => {};
-
   const saveButton = (
     <input
       type="button"
-      disabled={tempzip.length != 5}
+      disabled={tempzip.length !== 5}
       onClick={() => {
         setmyZip({ tempzip });
         setMode("edit");
@@ -75,10 +71,8 @@ const App = () => {
       </header>
       {newZipcode}
       {saveButton}
-
-      <Login> </Login>
+      {token ? <h1 className="App-title">Logged in</h1> : <Login />}
     </div>
   );
 };
-
 export default App;
