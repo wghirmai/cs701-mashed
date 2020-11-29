@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+// eslint-disable-next-line
 const { Model } = require("objection");
 
 class Users extends Model {
