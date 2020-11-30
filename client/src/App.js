@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import {
   ListGroup,
@@ -148,6 +149,7 @@ const App = () => {
         <ScrollToBottom>
           <Area> {userids}</Area>
         </ScrollToBottom>
+
       </div>
     );
   }
@@ -156,8 +158,8 @@ const App = () => {
     <div className="App">
       <h1 className="App-title">Welcome to MASHED</h1>
       <Login></Login>
+
     </div>
   );
 };
-
 export default App;
