@@ -4,7 +4,7 @@ By Winta Ghirmai and Elva Osorio
 ### about
 TODO: a few sentences describing your project
 
-view our website [here](https://wghirmai.github.io/cs701-netflix-chill/)
+view our website [here](https://wghirmai.github.io/cs701-mashed/)
 
 ### building
 TODO: how can someone build your project, starting from the GitHub clone/download, installing dependencies and compiling.
