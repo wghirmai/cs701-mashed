@@ -4,10 +4,9 @@ import {
   ListGroupItem,
   Card,
   CardTitle,
-  CardBody,
   CardText,
-  CardGroup,
-  CardSubtitle
+  CardSubtitle,
+  Button
 } from "reactstrap";
 import queryString from "query-string";
 import "./App.css";
@@ -79,33 +78,8 @@ const App = () => {
 
     //user has spotify user id
     //artists has top 10 spotify artists
-
-    //
-    // console.log("user id");
-    // console.log(user);
-
-    // //updating and fetching database with new user
-    //     fetch('/api/users', {
-    //       method: 'POST',
-    //       body: JSON.stringify(newUser),
-    //       headers: new Headers({
-    //         Accept: 'application/json',
-    //         'Content-Type': 'application/json',
-    //       }),
-    //     })
-    //       .then((response) => {
-    //         if (response.ok) {
-    //           return response.json();
-    //         }
-    //         throw new Error(response.statusText);
-    //       })
-    //       .then((fetchedUser) => {
-    //         // Append the new user to the users array
-    //         const modifiedUsers = [...users, fetchedUser];
-    //         setUsers(modifiedUsers);
-    //       })
-    //       .catch((err) => console.error(err)); // eslint-disable-line no-console
   }, [token]);
+
   const newUser = {
     user_name: user,
     zipcode: "22193",
@@ -121,7 +95,8 @@ const App = () => {
     best10: artists[9]
   };
   console.log(newUser);
-
+  //show the common artists and distance
+  //explain why we chose 10
   //console.log(user, users, artists);
   //takes users database/array of user objects and maps to card with each info
   const userids = users.map(user => (
@@ -141,10 +116,48 @@ const App = () => {
     </Card>
   ));
 
+  const handleUser = () => {
+    // //updating and fetching database with new user
+    fetch("/api/users", {
+      method: "POST",
+      body: JSON.stringify(newUser),
+      headers: new Headers({
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      })
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error(response.statusText);
+      })
+      .then(fetchedUser => {
+        // Append the new user to the users array
+        const modifiedUsers = [...users, fetchedUser];
+        setUsers(modifiedUsers);
+        console.log(users);
+      })
+      .catch(err => console.error(err)); // eslint-disable-line no-console
+  };
+
+  const startButton = (
+    <Button
+      justify-self="center"
+      size="lg"
+      onClick={() => {
+        handleUser();
+      }}
+    >
+      Add yourself!
+    </Button>
+  );
+
   if (mode === "loggedin") {
     return (
       <div className="App">
         <h1 className="App-title">Welcome to MASHED</h1>
+        {startButton}
         <ScrollToBottom>
           <Area> {userids}</Area>
         </ScrollToBottom>
