@@ -30,7 +30,7 @@ class Users extends Model {
 
       properties: {
         user_name: { type: "string" },
-        zipcode: { type: "integer" },
+        zipcode: { type: "string" },
         best1: { type: "string" },
         best2: { type: "string" },
         best3: { type: "string" },

@@ -1,3 +1,4 @@
+
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
 const http = require("http");
@@ -88,5 +89,6 @@ app.use((error, request, response, next) => {
   }
 });
 
+
 const server = http.createServer(app).listen(process.env.PORT || 3001);
-console.log("Listening on port %d", server.address().port);
+console.log("Listening on port %d", server.address().port); // eslint-disable-line no-console
