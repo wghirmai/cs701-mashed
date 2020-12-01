@@ -8,9 +8,7 @@
 
 # production
 /build
-# sqlite
-user.db
-users.db
+
 # misc
 .DS_Store
 .env
