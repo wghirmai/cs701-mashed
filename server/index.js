@@ -1,19 +1,22 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-console */
 const http = require("http");
 
-let express = require("express");
-let request = require("request");
-let querystring = require("querystring");
+const express = require("express");
+const request = require("request");
+const querystring = require("querystring");
 
 const knexConfig = require("./knexfile");
 const knex = require("knex")(knexConfig[process.env.NODE_ENV || "development"]);
 const { Model } = require("objection");
 const Users = require("./models/Users");
+
 Model.knex(knex);
 
-let app = express();
+const app = express();
 
-let redirect_uri = process.env.REDIRECT_URI || "http://localhost:3001/callback";
+const redirect_uri =
+  process.env.REDIRECT_URI || "http://localhost:3001/callback";
 
 app.get("/login", function(req, res) {
   res.redirect(
