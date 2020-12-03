@@ -116,7 +116,7 @@ function App() {
 
   const newUser = {
     user_name: user,
-    zipcode: parseInt(myzip),
+    zipcode: myzip,
     best1: orderlist[0],
     best2: orderlist[1],
     best3: orderlist[2],
@@ -180,11 +180,26 @@ function App() {
              })
              .catch(err => console.log(err));
          } else {
+      console.log(newUser);
+    const fakeUser = {
+      user_name: "user",
+      zipcode: "myzip",
+      best1: "orderlist[0]",
+      best2: "orderlist[1]",
+      best3: "orderlist[2]",
+      best4: "orderlist[3]",
+      best5: "orderlist[4]",
+      best6: "orderlist[5]",
+      best7: "orderlist[6]",
+      best8: "orderlist[7]",
+      best9: "orderlist[8]",
+      best10: "orderlist[9]"
+    };
            fetch("/api/users", {
-             mode: 'no-cors',
+             //mode: 'no-cors',
              method: 'POST',
-             body: JSON.stringify(newUser),
-             headers: new Headers({ 'Content-type': 'application/json' })
+             body: JSON.stringify(fakeUser),
+             headers: new Headers({ 'Content-Type': 'application/json' })
            })
              .then(response => {
             console.log(response);

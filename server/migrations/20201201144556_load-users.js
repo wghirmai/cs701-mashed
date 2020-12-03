@@ -1,7 +1,8 @@
 
 /* eslint-disable func-names */
 exports.up = function(knex) {
-  return knex.schema.createTable("Users", table => {
+  return knex.schema.createTable("User", table => {
+    table.increments('id').primary();
     table.string("user_name");
     table.string("zipcode");
     table.string("best1");
@@ -18,5 +19,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists("Users");
+  return knex.schema.dropTableIfExists("User");
 };

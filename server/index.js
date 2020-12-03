@@ -6,7 +6,7 @@ const http = require("http");
 const express = require("express");
 const request = require("request");
 const querystring = require("querystring");
-
+const bodyParser = require('body-parser'); 
 const knexConfig = require("./knexfile");
 const knex = require("knex")(knexConfig[process.env.NODE_ENV || "development"]);
 const { Model } = require("objection");
@@ -19,6 +19,7 @@ const app = express();
 const redirect_uri =
   process.env.REDIRECT_URI || "http://localhost:3001/callback";
 
+app.use(bodyParser.json());
 app.get("/login", function(req, res) {
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
@@ -66,6 +67,7 @@ app.get("/api/users", (request, response, next) => {
 
 app.post("/api/users", (request, response, next) => {
   const newUser = { ...request.body };
+  console.log(request);
   Users.query()
     .insertAndFetch(newUser)
     .then(users => {
