@@ -74,6 +74,34 @@ app.post("/api/users", (request, response, next) => {
       response.send(users);
     }, next);
 });
+
+app.put(
+  '/api/users/:id',
+  (request, response, next) => {
+    const {id, ...updatedArticle } = {
+      ...request.body
+    }; // eslint-disable-line no-unused-vars
+    Article.query()
+      .updateAndFetchById(request.params.user_name, updatedArticle)
+      .then((article) => {
+        response.send(article);
+      }, next);
+      console.log(request.params.user_name);
+  }
+);
+
+app.delete(
+  '/api/users/:id',
+  (request, response, next) => {
+    Article.query()
+      .deleteById(request.params.id)
+      .then((result) => {
+        response.sendStatus(200);
+      }, next);
+      console.log("request.params.id");
+      console.log(request.params.id);
+  }
+);
 // db-errors provides a consistent wrapper around database errors
 const { wrapError, DBError } = require("db-errors");
 

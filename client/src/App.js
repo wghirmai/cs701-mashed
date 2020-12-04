@@ -42,6 +42,9 @@ function App() {
   //const [tempzip, settempZip] = useState("");
   const [logged, setlogged]= useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [newUser, setNewUser]= useState(null);
+  const [deleted, setDeleted] = useState(0);
+
   useEffect(() => {
     let parsed = queryString.parse(window.location.search);
     let accessToken = parsed.access_token;
@@ -89,14 +92,30 @@ function App() {
     //user has spotify user id
     //artists has top 10 spotify artists
   }, [token]);
+
   const saveButton = (
     <input
       type="button"
       disabled={tempzip.length !== 5}
       onClick={() => {
         setmyZip(tempzip );
-        setMode("edit");
+        const orderlist = artists.sort();
+        setNewUser({
+          user_name: user,
+          zipcode: tempzip,
+          best1: orderlist[0],
+          best2: orderlist[1],
+          best3: orderlist[2],
+          best4: orderlist[3],
+          best5: orderlist[4],
+          best6: orderlist[5],
+          best7: orderlist[6],
+          best8: orderlist[7],
+          best9: orderlist[8],
+          best10: orderlist[9]});
+          console.log(newUser);
       }}
+      
       value="Save"
     />
   );
@@ -107,27 +126,15 @@ function App() {
       size="45"
       value={tempzip}
       placeholder="Zipcode must be set"
-      onChange={event => settempZip(event.target.value)}
+      onChange={event => settempZip(event.target.value)
+      }
     ></input>
   );
 
  //aplhabetical sort list of artists
- const orderlist = artists.sort();
+ 
 
-  const newUser = {
-    user_name: user,
-    zipcode: myzip,
-    best1: orderlist[0],
-    best2: orderlist[1],
-    best3: orderlist[2],
-    best4: orderlist[3],
-    best5: orderlist[4],
-    best6: orderlist[5],
-    best7: orderlist[6],
-    best8: orderlist[7],
-    best9: orderlist[8],
-    best10: orderlist[9]
-  };
+   
   console.log(newUser);
   console.log(parseInt(myzip));
   //show the common artists and distance
@@ -152,11 +159,11 @@ function App() {
   ));
 
   
-  const handleUser = newUser => {
+  const handleUser = () => {
        if (newUser) {
          //edit current user
          if (currentUser) {
-           fetch(`/api/users/${currentUser.id}`, {
+           fetch(`/api/users/${currentUser.user_name}`, {
              method: 'PUT',
              body: JSON.stringify({ ...currentUser, ...newUser }),
              headers: new Headers({ 'Content-type': 'application/json' })
@@ -171,7 +178,7 @@ function App() {
                setCurrentUser(data);
                //this is where we decide to edit
                const alteredUsers = users.map(user => {
-                 if (user.user_name === data.id) {
+                 if (user.user_name === data.user_name) {
                    return data;
                  }
                  return user;
@@ -198,7 +205,7 @@ function App() {
            fetch("/api/users", {
              //mode: 'no-cors',
              method: 'POST',
-             body: JSON.stringify(fakeUser),
+             body: JSON.stringify(newUser),
              headers: new Headers({ 'Content-Type': 'application/json' })
            })
              .then(response => {
@@ -212,17 +219,46 @@ function App() {
                const alteredUsers = [...users, data];
                setUsers(alteredUsers);
                 console.log("usersss list:"+ users);
-               setCurrentUser(data);
+               setCurrentUser(newUser);
+               
              })
              .catch(err => console.log(err));
+            
          }
        }
+      
        setMode('view');
      };
 
 
-
+     console.log(currentUser);
   
+     const deleteID = (
+      <input
+        type="text"
+        size="45"
+        value={deleted}
+        placeholder="Which ID you'd like to delete"
+        onChange={event => setDeleted(event.target.value)
+        }
+      ></input>
+    );
+  
+     const handleDelete=()=>{
+      fetch(`/api/users/${deleted}`, { method: 'DELETE' })
+      .then((response) => {
+        if (response.ok) {
+          const alteredUsers = alteredUsers.filter(
+            (user) => user.id !== deleted
+          );
+          setUsers(alteredUsers);
+        }
+      })
+      .catch((err) => console.error(err)); // eslint-disable-line no-console
+      
+     };    
+
+
   const startButton = (
     <Button
       justify-self="center"
@@ -232,6 +268,19 @@ function App() {
       }}
     >
       Add yourself!
+    </Button>
+  ); 
+
+    
+  const deleteButton = (
+    <Button
+      justify-self="center"
+      size="lg"
+      onClick={() => {
+        handleDelete();
+      }}
+    >
+      Delete
     </Button>
   );
 
@@ -255,8 +304,8 @@ return (
     <h1 className="App-title">Welcome to MASHED</h1>
     {logged ? 
     <Area>
-  {newZipcode} {saveButton} {userids}
-    <Editor user={currentUser} complete={handleUser}/>
+  {newZipcode} {saveButton} {userids} {startButton} {deleteID} {deleteButton}
+    <Editor user={currentUser} complete={handleUser} />
     </Area>
      :
      <Login></Login> }
