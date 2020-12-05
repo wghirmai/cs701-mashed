@@ -2,7 +2,7 @@
   "name": "project-client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://mashed.herokuapp.com/callback",
+  "proxy": "http://localhost:3001",
     "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
