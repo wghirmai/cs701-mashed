@@ -1,8 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  ListGroup,
-  ListGroupItem,
+ // ListGroupItem,
   Card,
   CardTitle,
   CardText,
@@ -15,7 +14,7 @@ import Login from "./Login.js";
 import styled from "styled-components";
 import ScrollToBottom from "react-scroll-to-bottom";
 import Zipcode from "./Zipcode";
-import axios from "axios";
+//import axios from "axios";
 import Editor from "./Editor"
 //import OtherUsers from "./OtherUsers.js";
 //import { getTokenFromResponse } from "./spotify";
@@ -23,10 +22,10 @@ import Editor from "./Editor"
 //const spotify = new SpotifyWebApi;
 //<img src={logo} className="App-logo" alt="logo" />
 
-const UserItem = styled(ListGroupItem)`
+/*const UserItem = styled(ListGroupItem)`
   font-weight: bold;
   padding: 0.4rem;
-`;
+`;*/
 const Area = styled.div`
   height: 5000px;
 `;
@@ -36,7 +35,7 @@ function App() {
   const [artists, setArtists] = useState([]);
   const [token, setToken] = useState("");
   const [users, setUsers] = useState([]);
-  const [currentZipcodes, setZipcodes] = useState([]);
+  //const [currentZipcodes, setZipcodes] = useState([]);
   const [myzip, setmyZip] = useState("");
   const [tempzip, settempZip] = useState(myzip ? myzip.tempzip : "");
   //const [tempzip, settempZip] = useState("");
@@ -55,7 +54,7 @@ function App() {
     })
       .then(response => response.json())
       .then(data => {
-        setZipcodes(data);
+        //setZipcodes(data);
         setUser(data.id); //getting spotify user id
         console.log(data.id);
         //setMode("loggedin"); //go to page of users for now will go to page for zipcode
@@ -188,10 +187,7 @@ function App() {
              .catch(err => console.log(err));
          } else {
       console.log(newUser);
-    const fakeUser = {
-      user_name: "user",
-      zipcode: "myzip",
-      best1: "orderlist[0]",
+    /*const fakeUser = {user_name: "user",zipcode: "myzip",best1: "orderlist[0]",
       best2: "orderlist[1]",
       best3: "orderlist[2]",
       best4: "orderlist[3]",
@@ -201,7 +197,7 @@ function App() {
       best8: "orderlist[7]",
       best9: "orderlist[8]",
       best10: "orderlist[9]"
-    };
+    }; */
            fetch("/api/users", {
              //mode: 'no-cors',
              method: 'POST',
@@ -248,7 +244,7 @@ function App() {
       fetch(`/api/users/${deleted}`, { method: 'DELETE' })
       .then((response) => {
         if (response.ok) {
-          const alteredUsers = alteredUsers.filter(
+          const alteredUsers = users.filter(
             (user) => user.id !== deleted
           );
           setUsers(alteredUsers);

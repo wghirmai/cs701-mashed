@@ -18,15 +18,7 @@ const EditorContainer = styled.div`
   margin: 40px;
 `;
 
-const TitleInput = styled.input`
-  display: block;
-`;
-
-const ExtractInput = styled.textarea`
-  margin: 10px 0px;
-  display: block;
-`;
-
+/* eslint-disable no-unused-vars */
 const Editor = ({ user, complete }) => {
   const [username, setUsername] = useState(user ? user.user_name : '');
   const [zipcode, setZipcode] = useState(user ? user.zipcode : '');
@@ -40,7 +32,7 @@ const Editor = ({ user, complete }) => {
  const [best8, setbest8] = useState(user ? user.best8 : '');
  const [best9, setbest9] = useState(user ? user.best9 : '');
  const [best10, setbest10] = useState(user ? user.best10 : '');
-
+/* eslint-disable no-unused-vars */
   const constructUser = () => ({
     user_name: username,
     zipcode: zipcode,

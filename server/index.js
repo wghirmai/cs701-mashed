@@ -78,30 +78,31 @@ app.post("/api/users", (request, response, next) => {
 app.put(
   '/api/users/:id',
   (request, response, next) => {
-    const {id, ...updatedArticle } = {
+    const {...updatedArticle } = {
       ...request.body
     }; // eslint-disable-line no-unused-vars
-    Article.query()
+    Users.query()
       .updateAndFetchById(request.params.user_name, updatedArticle)
-      .then((article) => {
-        response.send(article);
+      .then((users) => {
+        response.send(users);
       }, next);
       console.log(request.params.user_name);
   }
 );
-
+/* eslint-disable no-unused-vars */
 app.delete(
   '/api/users/:id',
   (request, response, next) => {
-    Article.query()
+    Users.query()
       .deleteById(request.params.id)
-      .then((result) => {
+      .then((result) => { 
         response.sendStatus(200);
       }, next);
       console.log("request.params.id");
       console.log(request.params.id);
   }
 );
+/* eslint-disable no-unused-vars */
 // db-errors provides a consistent wrapper around database errors
 const { wrapError, DBError } = require("db-errors");
 
