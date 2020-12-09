@@ -1,7 +1,8 @@
+import React, { useEffect, useReducer, useState } from "react";
+import axios from "axios";
 
-import React, { useEffect, useState } from "react";
 import {
- // ListGroupItem,
+  // ListGroupItem,
   Card,
   CardTitle,
   CardText,
@@ -15,7 +16,8 @@ import styled from "styled-components";
 import ScrollToBottom from "react-scroll-to-bottom";
 import Zipcode from "./Zipcode";
 //import axios from "axios";
-import Editor from "./Editor"
+import Editor from "./Editor";
+import { ConstraintViolationError } from "objection";
 //import OtherUsers from "./OtherUsers.js";
 //import { getTokenFromResponse } from "./spotify";
 //import SpotifyWebApi from "spotify-web-api-js";
@@ -33,15 +35,17 @@ function App() {
   const [mode, setMode] = useState("view");
   const [user, setUser] = useState("");
   const [artists, setArtists] = useState([]);
+  const [ourArtists, setOurArtists] = useState([]);
   const [token, setToken] = useState("");
   const [users, setUsers] = useState([]);
   //const [currentZipcodes, setZipcodes] = useState([]);
   const [myzip, setmyZip] = useState("");
   const [tempzip, settempZip] = useState(myzip ? myzip.tempzip : "");
+  const [zipcodes, setZipcodes] = useState(null);
   //const [tempzip, settempZip] = useState("");
-  const [logged, setlogged]= useState(false);
+  const [logged, setlogged] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [newUser, setNewUser]= useState(null);
+  const [newUser, setNewUser] = useState(null);
   const [deleted, setDeleted] = useState(0);
 
   useEffect(() => {
@@ -56,7 +60,6 @@ function App() {
       .then(data => {
         //setZipcodes(data);
         setUser(data.id); //getting spotify user id
-        console.log(data.id);
         //setMode("loggedin"); //go to page of users for now will go to page for zipcode
         setlogged(true);
       });
@@ -71,7 +74,6 @@ function App() {
       })
       .then(data => {
         setUsers(data); //list of users(username, zip, best..)
-        console.log(data);
       })
 
       .catch(err => console.error(err)); // eslint-disable-line no-console
@@ -83,7 +85,6 @@ function App() {
       .then(response => response.json())
       .then(data => {
         setArtists(data.items.map(item => item.name));
-        console.log(data.items.map(item => item.name));
       })
 
       .catch(err => console.error(err)); // eslint-disable-line no-console
@@ -97,8 +98,8 @@ function App() {
       type="button"
       disabled={tempzip.length !== 5}
       onClick={() => {
-        setmyZip(tempzip );
-        const orderlist = artists.sort();
+        setmyZip(tempzip);
+        const orderlist = artists;
         setNewUser({
           user_name: user,
           zipcode: tempzip,
@@ -111,10 +112,9 @@ function App() {
           best7: orderlist[6],
           best8: orderlist[7],
           best9: orderlist[8],
-          best10: orderlist[9]});
-          console.log(newUser);
+          best10: orderlist[9]
+        });
       }}
-      
       value="Save"
     />
   );
@@ -125,135 +125,166 @@ function App() {
       size="45"
       value={tempzip}
       placeholder="Zipcode must be set"
-      onChange={event => settempZip(event.target.value)
-      }
+      onChange={event => settempZip(event.target.value)}
     ></input>
   );
 
- //aplhabetical sort list of artists
- 
-
-   
-  console.log(newUser);
-  console.log(parseInt(myzip));
+  //console.log([users[0].best1,users.best2,users.best3,users.best4,users.best5,users.best6,users.best7,users.best8,users.best9,users.best10]);
   //show the common artists and distance
   //explain why we chose 10
   //console.log(user, users, artists);
   //takes users database/array of user objects and maps to card with each info
-  const userids = users.map(user => (
-    <Card style={{ width: "100rem" }} key={user.user_name}>
-      <CardTitle> {user.user_name}</CardTitle>
-      <CardSubtitle> {user.zipcode}</CardSubtitle>
-      <CardText> {user.best1}</CardText>
-      <CardText> {user.best2}</CardText>
-      <CardText> {user.best3}</CardText>
-      <CardText> {user.best4}</CardText>
-      <CardText> {user.best5}</CardText>
-      <CardText> {user.best6}</CardText>
-      <CardText> {user.best7}</CardText>
-      <CardText> {user.best8}</CardText>
-      <CardText> {user.best9}</CardText>
-      <CardText> {user.best10}</CardText>
-    </Card>
-  ));
+  //
+  //  function getArraysIntersection(a1,a2){
+  //    return  a1.filter(function(n) {return a2.indexOf(n) !== -1;});
+  //}
+  //console.log(ourArtists.map(person=>getArraysIntersection(person,artists)));
+  console.log(zipcodes);
 
-  
-  const handleUser = () => {
-       if (newUser) {
-         //edit current user
-         if (currentUser) {
-           fetch(`/api/users/${currentUser.user_name}`, {
-             method: 'PUT',
-             body: JSON.stringify({ ...currentUser, ...newUser }),
-             headers: new Headers({ 'Content-type': 'application/json' })
-           })
-             .then(response => {
-               if (!response.ok) {
-                 throw new Error(response.status_text);
-               }
-               return response.json();
-             })
-             .then(data => {
-               setCurrentUser(data);
-               //this is where we decide to edit
-               const alteredUsers = users.map(user => {
-                 if (user.user_name === data.user_name) {
-                   return data;
-                 }
-                 return user;
-               });
-              setUsers(alteredUsers);
-             })
-             .catch(err => console.log(err));
-         } else {
-      console.log(newUser);
-    /*const fakeUser = {user_name: "user",zipcode: "myzip",best1: "orderlist[0]",
-      best2: "orderlist[1]",
-      best3: "orderlist[2]",
-      best4: "orderlist[3]",
-      best5: "orderlist[4]",
-      best6: "orderlist[5]",
-      best7: "orderlist[6]",
-      best8: "orderlist[7]",
-      best9: "orderlist[8]",
-      best10: "orderlist[9]"
-    }; */
-           fetch("/api/users", {
-             //mode: 'no-cors',
-             method: 'POST',
-             body: JSON.stringify(newUser),
-             headers: new Headers({ 'Content-Type': 'application/json' })
-           })
-             .then(response => {
-            console.log(response);
-               if (!response.ok) {
-                 throw new Error(response.status_text);
-               }
-               return response.json();
-             })
-             .then(data => {
-               const alteredUsers = [...users, data];
-               setUsers(alteredUsers);
-                console.log("usersss list:"+ users);
-               setCurrentUser(newUser);
-               
-             })
-             .catch(err => console.log(err));
-            
-         }
-       }
-      
-       setMode('view');
-     };
-
-
-     console.log(currentUser);
-  
-     const deleteID = (
-      <input
-        type="text"
-        size="45"
-        value={deleted}
-        placeholder="Which ID you'd like to delete"
-        onChange={event => setDeleted(event.target.value)
-        }
-      ></input>
-    );
-  
-     const handleDelete=()=>{
-      fetch(`/api/users/${deleted}`, { method: 'DELETE' })
-      .then((response) => {
-        if (response.ok) {
-          const alteredUsers = users.filter(
-            (user) => user.id !== deleted
+  const userids = users
+    .filter(person => zipcodes !== null && zipcodes.includes(person.zipcode))
+    //.filter(person=> person.zipcode==="05753" || person.zipcode==="05740" || person.zipcode==="91755")
+    //.filter(user=> getArraysIntersection(users.map(user=>{return user.best1,user.best2,user.best3,user.best4,user.best5,user.best6,user.best7,user.best8,user.best9,user.best10}),artists)!==[])
+    .map(user => {
+      {
+        if (
+          artists.includes(user.best1) ||
+          artists.includes(user.best2) ||
+          artists.includes(user.best3) ||
+          artists.includes(user.best4) ||
+          artists.includes(user.best5) ||
+          artists.includes(user.best6) ||
+          artists.includes(user.best7) ||
+          artists.includes(user.best8) ||
+          artists.includes(user.best9) ||
+          artists.includes(user.best10)
+        ) {
+          return (
+            <Card style={{ width: "100rem" }} key={user.user_name}>
+              <CardTitle>
+                {" "}
+                <a href={`https://open.spotify.com/user/${user.user_name}`}>
+                  {" "}
+                  {user.user_name}{" "}
+                </a>
+              </CardTitle>
+              <CardSubtitle> {user.zipcode}</CardSubtitle>
+              <CardText> {user.best1}</CardText>
+              <CardText> {user.best2}</CardText>
+              <CardText> {user.best3}</CardText>
+              <CardText> {user.best4}</CardText>
+              <CardText> {user.best5}</CardText>
+              <CardText> {user.best6}</CardText>
+              <CardText> {user.best7}</CardText>
+              <CardText> {user.best8}</CardText>
+              <CardText> {user.best9}</CardText>
+              <CardText> {user.best10}</CardText>
+            </Card>
           );
+        }
+      }
+    });
+
+  //[userids.].filter(it => arrB.includes(it));
+
+  //function intersect(o1, o2){
+  // if (o1.filter(k => k in o2)!==[]) {
+  // return o2
+  //}
+  //}
+
+  //document.write('<pre>' + JSON.stringify(intersect(currentUser, users[1])) + '</pre>');
+
+  const handleUser = () => {
+    if (newUser) {
+      //edit current user
+      if (currentUser) {
+        fetch(`/api/users/${currentUser.user_name}`, {
+          method: "PUT",
+          body: JSON.stringify({ ...currentUser, ...newUser }),
+          headers: new Headers({ "Content-type": "application/json" })
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(response.status_text);
+            }
+            return response.json();
+          })
+          .then(data => {
+            setCurrentUser(data);
+            //this is where we decide to edit
+
+            const alteredUsers = users.map(user => {
+              if (user.user_name === data.user_name) {
+                return data;
+              }
+              return user;
+            });
+
+            setUsers(alteredUsers);
+          })
+          .catch(err => console.log(err));
+      } else {
+        fetch("/api/users", {
+          //mode: 'no-cors',
+          method: "POST",
+          body: JSON.stringify(newUser),
+          headers: new Headers({ "Content-Type": "application/json" })
+        })
+          .then(response => {
+            //console.log(response);
+            if (!response.ok) {
+              throw new Error(response.status_text);
+            }
+            return response.json();
+          })
+          .then(data => {
+            const alteredUsers = [...users, data];
+            setUsers(alteredUsers);
+            setCurrentUser(newUser);
+          })
+          .catch(err => console.log(err));
+      }
+    }
+
+    setMode("view");
+  };
+
+  console.log(ourArtists);
+
+  const deleteID = (
+    <input
+      type="text"
+      size="45"
+      value={deleted}
+      placeholder="Which ID you'd like to delete"
+      onChange={event => setDeleted(event.target.value)}
+    ></input>
+  );
+
+  const handleDelete = () => {
+    fetch(`/api/users/${deleted}`, { method: "DELETE" })
+      .then(response => {
+        if (response.ok) {
+          const alteredUsers = users.filter(user => user.id !== deleted);
           setUsers(alteredUsers);
         }
       })
-      .catch((err) => console.error(err)); // eslint-disable-line no-console
-      
-     };    
-
+      .catch(err => console.error(err)); // eslint-disable-line no-console
+  };
+  const handleZipcode = () => {
+    fetch(
+      "https://cors-anywhere.herokuapp.com/https://www.zipcodeapi.com/rest/y0UDK9tMgkCOtTDLhNGJstEk9PVLAIaf3wF0jtx1qey0Nke2ZfytzxiL2VxT2xhW/radius.json/" +
+        tempzip +
+        "/5/mile"
+    )
+      .then(response => response.json())
+      .then(data => {
+        setZipcodes(data.zip_codes.map(item => item.zip_code));
+        //setZipcodes(zipcodes.push(tempzip));
+      })
+      .catch(err => console.error(err)); // eslint-disable-line no-console
+  };
 
   const startButton = (
     <Button
@@ -261,13 +292,13 @@ function App() {
       size="lg"
       onClick={() => {
         handleUser();
+        handleZipcode();
       }}
     >
       Add yourself!
     </Button>
-  ); 
+  );
 
-    
   const deleteButton = (
     <Button
       justify-self="center"
@@ -285,28 +316,28 @@ function App() {
       <div className="App">
         <h1 className="App-title">Welcome to MASHED</h1>
 
-        <ScrollToBottom> 
+        <ScrollToBottom>
           <Area> {userids}</Area>
-          </ScrollToBottom>
-          <Zipcode zip={myzip} />
-
+        </ScrollToBottom>
+        <Zipcode zip={myzip} />
       </div>
     );
   }
-//<Area> {newZipcode}     {saveButton} {userids}  
-/**/
-return (
-  <div className="App">
-    <h1 className="App-title">Welcome to MASHED</h1>
-    {logged ? 
-    <Area>
-  {newZipcode} {saveButton} {userids} {startButton} {deleteID} {deleteButton}
-    <Editor user={currentUser} complete={handleUser} />
-    </Area>
-     :
-     <Login></Login> }
-
-  </div>
-);
+  //<Area> {newZipcode}     {saveButton} {userids}
+  /**/
+  return (
+    <div className="App">
+      <h1 className="App-title">Welcome to MASHED</h1>
+      {logged ? (
+        <Area>
+          {newZipcode} {saveButton} {startButton} {deleteID} {deleteButton}{" "}
+          {userids}
+          <Editor user={currentUser} complete={handleUser} />
+        </Area>
+      ) : (
+        <Login></Login>
+      )}
+    </div>
+  );
 }
 export default App;
