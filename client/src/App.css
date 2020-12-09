@@ -24,9 +24,11 @@
 .App-title {
   background-color: #282c34;
   min-height: 30vh;
+  min-width: 170vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-radius: 50px;
   justify-content: center;
   font-size: calc(10px + 8vmin);
   color: white;

@@ -55,6 +55,7 @@ function App() {
     display: inline-block;
     border-radius: 100px;
     padding: 0.5rem 0;
+    font-weight: bold;
     margin: 0.5rem 1rem;
     width: 11rem;
     background: transparent;
@@ -73,21 +74,22 @@ function App() {
   const Buttonz = styled.a`
     /* This renders the buttons above... Edit me! */
     display: inline-block;
-    border-radius: 3px;
-    margin: 0.5em 1em;
-    padding: 0.25em 1em;
+    border-radius: 100px;
+    padding: 0.5rem 0;
+    margin: 0.5rem 1rem;
+    font-weight: bold;
     width: 11rem;
-    background: #1db954;
-    color: white;
-    border: 2px solid grey;
+    background: transparent;
+    color: black;
+    border: 2px solid black;
 
     /* The GitHub button is a primary button
- * edit this to target it specifically! */
+   * edit this to target it specifically! */
     ${props =>
       props.primary &&
       css`
         background: white;
-        color: black;
+        color: white;
       `}
   `;
   const CardSubtitle = styled.h1`
