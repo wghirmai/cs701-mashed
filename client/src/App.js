@@ -12,9 +12,11 @@ import {
 } from "reactstrap";
 import queryString from "query-string";
 import "./App.css";
+import logo from "./Spotify_Icon_RGB_Green.png";
 import Login from "./Login.js";
-import styled from "styled-components";
 import ScrollToBottom from "react-scroll-to-bottom";
+import styled, { css } from "styled-components";
+
 import Zipcode from "./Zipcode";
 //import axios from "axios";
 import Editor from "./Editor";
@@ -23,7 +25,6 @@ import { ConstraintViolationError } from "objection";
 //import { getTokenFromResponse } from "./spotify";
 //import SpotifyWebApi from "spotify-web-api-js";
 //const spotify = new SpotifyWebApi;
-//<img src={logo} className="App-logo" alt="logo" />
 
 /*const UserItem = styled(ListGroupItem)`
   font-weight: bold;
@@ -49,19 +50,45 @@ function App() {
   const [newUser, setNewUser] = useState(null);
   const [deleted, setDeleted] = useState(0);
 
-  const Button = styled.button`
-    border-radius: 20px;
-    background-color: #1db954;
+  const Button = styled.a`
+    /* This renders the buttons above... Edit me! */
+    display: inline-block;
+    border-radius: 100px;
+    padding: 0.5rem 0;
+    margin: 0.5rem 1rem;
+    width: 11rem;
+    background: transparent;
     color: white;
-    border: none;
-    padding: 0.5em 1em;
-    letter-spacing: 1px;
-    font-size: 2em;
-    outline: none;
+    border: 2px solid white;
 
-    &:hover {
-      cursor: pointer;
-    }
+    /* The GitHub button is a primary button
+   * edit this to target it specifically! */
+    ${props =>
+      props.primary &&
+      css`
+        background: white;
+        color: white;
+      `}
+  `;
+  const Buttonz = styled.a`
+    /* This renders the buttons above... Edit me! */
+    display: inline-block;
+    border-radius: 3px;
+    margin: 0.5em 1em;
+    padding: 0.25em 1em;
+    width: 11rem;
+    background: #1db954;
+    color: white;
+    border: 2px solid grey;
+
+    /* The GitHub button is a primary button
+ * edit this to target it specifically! */
+    ${props =>
+      props.primary &&
+      css`
+        background: white;
+        color: black;
+      `}
   `;
   const CardSubtitle = styled.h1`
     border: 1px solid #69696;
@@ -83,6 +110,14 @@ function App() {
     flex-flow: row wrap;
     align-items: center;
   `;
+  const par = styled.p`
+  color=#d3d3d3;
+  height: 42px;
+  text-align: center;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+`;
 
   useEffect(() => {
     let parsed = queryString.parse(window.location.search);
@@ -201,7 +236,7 @@ function App() {
                 {" "}
                 <a href={`https://open.spotify.com/user/${user.user_name}`}>
                   {" "}
-                  <Button> {user.user_name} </Button>
+                  <Buttonz> {user.user_name} </Buttonz>
                 </a>
               </CardTitle>
               <CardSubtitle> {user.zipcode}</CardSubtitle>
@@ -364,6 +399,8 @@ function App() {
   return (
     <div className="App">
       <h1 className="App-title">Welcome to MASHED</h1>
+      <p>Brought to you by</p>
+      <img src={logo} className="App-logo" alt="logo" />
       {logged ? (
         <Area>
           {newZipcode} {saveButton} {startButton} {deleteID} {deleteButton}{" "}
