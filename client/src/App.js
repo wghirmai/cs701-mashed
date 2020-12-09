@@ -1,5 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import axios from "axios";
+import "./App.css";
 
 import {
   // ListGroupItem,
@@ -47,6 +48,41 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [newUser, setNewUser] = useState(null);
   const [deleted, setDeleted] = useState(0);
+
+  const Button = styled.button`
+    border-radius: 20px;
+    background-color: #1db954;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    letter-spacing: 1px;
+    font-size: 2em;
+    outline: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  `;
+  const CardSubtitle = styled.h1`
+    border: 1px solid #69696;
+    height: 42px;
+    text-align: center;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    &:hover {
+      background: dark-grey;
+    }
+  `;
+
+  const CardText = styled.h2`
+    border: 1px solid light-black;
+    height: 42px;
+    text-align: center;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+  `;
 
   useEffect(() => {
     let parsed = queryString.parse(window.location.search);
@@ -142,7 +178,7 @@ function App() {
   console.log(zipcodes);
 
   const userids = users
-    .filter(person => zipcodes !== null && zipcodes.includes(person.zipcode))
+    //.filter(person=>zipcodes!==null && zipcodes.includes(person.zipcode))
     //.filter(person=> person.zipcode==="05753" || person.zipcode==="05740" || person.zipcode==="91755")
     //.filter(user=> getArraysIntersection(users.map(user=>{return user.best1,user.best2,user.best3,user.best4,user.best5,user.best6,user.best7,user.best8,user.best9,user.best10}),artists)!==[])
     .map(user => {
@@ -165,7 +201,7 @@ function App() {
                 {" "}
                 <a href={`https://open.spotify.com/user/${user.user_name}`}>
                   {" "}
-                  {user.user_name}{" "}
+                  <Button> {user.user_name} </Button>
                 </a>
               </CardTitle>
               <CardSubtitle> {user.zipcode}</CardSubtitle>
@@ -292,7 +328,7 @@ function App() {
       size="lg"
       onClick={() => {
         handleUser();
-        handleZipcode();
+        //handleZipcode();
       }}
     >
       Add yourself!
