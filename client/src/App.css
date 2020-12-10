@@ -1,29 +1,16 @@
 .App {
-  text-align: center;
-  display: grid;
   background-color: black;
-  place-items: center;
+  text-align: center;
 }
 
 .App-logo {
   height: 80px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 30vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
 .App-title {
   background-color: #282c34;
   min-height: 30vh;
-  min-width: 170vh;
+  min-width: auto;
   display: flex;
   flex-direction: column;
   align-items: center;

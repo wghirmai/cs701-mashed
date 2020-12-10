@@ -31,7 +31,7 @@ import { ConstraintViolationError } from "objection";
   padding: 0.4rem;
 `;*/
 const Area = styled.div`
-  height: 5000px;
+  height: auto;
 `;
 function App() {
   const [mode, setMode] = useState("view");
@@ -55,7 +55,8 @@ function App() {
     display: inline-block;
     border-radius: 100px;
     padding: 0.5rem 0;
-    font-weight: bold;
+    font-weight: 400;
+    font-size: 1.2rem;
     margin: 0.5rem 1rem;
     width: 11rem;
     background: transparent;
@@ -73,29 +74,21 @@ function App() {
   `;
   const Buttonz = styled.a`
     /* This renders the buttons above... Edit me! */
-    font-size: 2rem;
-    display: inline-block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 30px;
     border-radius: 100px;
-    padding: 0.5rem 0;
-    margin: 0.5rem 1rem;
     font-weight: bold;
-    width: 11rem;
-    background: transparent;
-    color: #e8e8e8;
-    border: 2px solid #e8e8e8;
-
-    /* The GitHub button is a primary button
- * edit this to target it specifically! */
-    ${props =>
-      props.primary &&
-      css`
-        background: white;
-        color: white;
-      `}
+    background-color: #1db954;
+    font-size: 1.2rem;
+    display: inline-block;
+    margin: 0.5rem 0.5rem;
   `;
+
   const Card = styled.div`
     background-color: #484848;
     border-radius: 30px;
+    min-width: auto;
     align-items: center;
   `;
 
@@ -103,6 +96,7 @@ function App() {
     text-align: center;
     font-size: 1.8rem;
     align-items: center;
+    min-width: auto;
     color: #d3d3d3;
     &:hover {
       background: dark-grey;
@@ -210,7 +204,10 @@ align-items: center;
           artists.includes(user.best10)
         ) {
           return (
-            <Card style={{ width: "100rem" }} key={user.user_name}>
+            <Card
+              style={{ width: "90%", margin: "0 auto" }}
+              key={user.user_name}
+            >
               <CardTitle>
                 {" "}
                 <a href={`https://open.spotify.com/user/${user.user_name}`}>
