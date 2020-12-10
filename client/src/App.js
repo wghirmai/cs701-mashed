@@ -2,7 +2,6 @@ import React, { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 
 import {
-  // ListGroupItem,
   Card,
   CardTitle,
   CardText,
@@ -18,16 +17,7 @@ import Zipcode from "./Zipcode";
 //import axios from "axios";
 import Editor from "./Editor";
 import { ConstraintViolationError } from "objection";
-//import OtherUsers from "./OtherUsers.js";
-//import { getTokenFromResponse } from "./spotify";
-//import SpotifyWebApi from "spotify-web-api-js";
-//const spotify = new SpotifyWebApi;
-//<img src={logo} className="App-logo" alt="logo" />
 
-/*const UserItem = styled(ListGroupItem)`
-  font-weight: bold;
-  padding: 0.4rem;
-`;*/
 const Area = styled.div`
   height: 5000px;
 `;
@@ -135,9 +125,9 @@ function App() {
   //console.log(user, users, artists);
   //takes users database/array of user objects and maps to card with each info
   //
-  //  function getArraysIntersection(a1,a2){
-  //    return  a1.filter(function(n) {return a2.indexOf(n) !== -1;});
-  //}
+    function getArraysIntersection(a1,a2){
+     return  a1.filter(function(n) {return a2.indexOf(n) !== -1;});
+  }
   //console.log(ourArtists.map(person=>getArraysIntersection(person,artists)));
   console.log(zipcodes);
 
@@ -158,7 +148,10 @@ function App() {
           artists.includes(user.best8) ||
           artists.includes(user.best9) ||
           artists.includes(user.best10)
-        ) {
+        ) 
+        
+ //       if (getArraysIntersection([user.best1,user.best2,user.best3,user.best4,user.best5,user.best6,user.best7,user.best8,user.best9,user.best10], artists).length !==0)  
+        {
           return (
             <Card style={{ width: "100rem" }} key={user.user_name}>
               <CardTitle>
@@ -169,6 +162,7 @@ function App() {
                 </a>
               </CardTitle>
               <CardSubtitle> {user.zipcode}</CardSubtitle>
+              <CardSubtitle> { (getArraysIntersection([user.best1,user.best2,user.best3,user.best4,user.best5,user.best6,user.best7,user.best8,user.best9,user.best10], artists).length/10 )*100 +"%" }</CardSubtitle>
               <CardText> {user.best1}</CardText>
               <CardText> {user.best2}</CardText>
               <CardText> {user.best3}</CardText>
@@ -185,21 +179,12 @@ function App() {
       }
     });
 
-  //[userids.].filter(it => arrB.includes(it));
-
-  //function intersect(o1, o2){
-  // if (o1.filter(k => k in o2)!==[]) {
-  // return o2
-  //}
-  //}
-
-  //document.write('<pre>' + JSON.stringify(intersect(currentUser, users[1])) + '</pre>');
 
   const handleUser = () => {
     if (newUser) {
       //edit current user
       if (currentUser) {
-        fetch(`/api/users/${currentUser.user_name}`, {
+        fetch(`/api/users/${deleted}`, {
           method: "PUT",
           body: JSON.stringify({ ...currentUser, ...newUser }),
           headers: new Headers({ "Content-type": "application/json" })
@@ -212,17 +197,15 @@ function App() {
           })
           .then(data => {
             setCurrentUser(data);
-            //this is where we decide to edit
-
-            const alteredUsers = users.map(user => {
-              if (user.user_name === data.user_name) {
-                return data;
-              }
-              return user;
-            });
-
-            setUsers(alteredUsers);
-          })
+            setDeleted(data.id);
+           //this is where we decide to edit
+           const alteredUsers = users.map(user => {
+                return user.user_name === data.user_name
+                     ? data
+                      : user;
+           });
+          setUsers(alteredUsers);
+         })
           .catch(err => console.log(err));
       } else {
         fetch("/api/users", {
@@ -242,6 +225,7 @@ function App() {
             const alteredUsers = [...users, data];
             setUsers(alteredUsers);
             setCurrentUser(newUser);
+            setDeleted(data.id);
           })
           .catch(err => console.log(err));
       }
@@ -332,7 +316,7 @@ function App() {
         <Area>
           {newZipcode} {saveButton} {startButton} {deleteID} {deleteButton}{" "}
           {userids}
-          <Editor user={currentUser} complete={handleUser} />
+         
         </Area>
       ) : (
         <Login></Login>

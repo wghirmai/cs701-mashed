@@ -78,11 +78,11 @@ app.post("/api/users", (request, response, next) => {
 app.put(
   '/api/users/:id',
   (request, response, next) => {
-    const {...updatedArticle } = {
+    const {...updatedUser } = {
       ...request.body
     }; // eslint-disable-line no-unused-vars
     Users.query()
-      .updateAndFetchById(request.params.user_name, updatedArticle)
+      .updateAndFetchById(request.params.id, updatedUser)
       .then((users) => {
         response.send(users);
       }, next);
