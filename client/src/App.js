@@ -63,7 +63,7 @@ function App() {
     border: 2px solid white;
 
     /* The GitHub button is a primary button
-   * edit this to target it specifically! */
+ * edit this to target it specifically! */
     ${props =>
       props.primary &&
       css`
@@ -73,6 +73,7 @@ function App() {
   `;
   const Buttonz = styled.a`
     /* This renders the buttons above... Edit me! */
+    font-size: 2rem;
     display: inline-block;
     border-radius: 100px;
     padding: 0.5rem 0;
@@ -80,11 +81,11 @@ function App() {
     font-weight: bold;
     width: 11rem;
     background: transparent;
-    color: black;
-    border: 2px solid black;
+    color: #e8e8e8;
+    border: 2px solid #e8e8e8;
 
     /* The GitHub button is a primary button
-   * edit this to target it specifically! */
+ * edit this to target it specifically! */
     ${props =>
       props.primary &&
       css`
@@ -92,33 +93,35 @@ function App() {
         color: white;
       `}
   `;
-  const CardSubtitle = styled.h1`
-    border: 1px solid #69696;
-    height: 42px;
-    text-align: center;
-    display: flex;
-    flex-flow: row wrap;
+  const Card = styled.div`
+    background-color: #484848;
+    border-radius: 30px;
     align-items: center;
+  `;
+
+  const CardSubtitle = styled.h1`
+    text-align: center;
+    font-size: 1.8rem;
+    align-items: center;
+    color: #d3d3d3;
     &:hover {
       background: dark-grey;
     }
   `;
 
   const CardText = styled.h2`
-    border: 1px solid light-black;
-    height: 42px;
+    color: #bebebe;
+    font-size: 1.3rem;
     text-align: center;
-    display: flex;
-    flex-flow: row wrap;
     align-items: center;
   `;
   const par = styled.p`
-  color=#d3d3d3;
-  height: 42px;
-  text-align: center;
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
+color=#d3d3d3;
+height: 42px;
+text-align: center;
+display: flex;
+flex-flow: row wrap;
+align-items: center;
 `;
 
   useEffect(() => {
@@ -165,32 +168,6 @@ function App() {
     //user has spotify user id
     //artists has top 10 spotify artists
   }, [token]);
-
-  const saveButton = (
-    <input
-      type="button"
-      disabled={tempzip.length !== 5}
-      onClick={() => {
-        setmyZip(tempzip);
-        const orderlist = artists;
-        setNewUser({
-          user_name: user,
-          zipcode: tempzip,
-          best1: orderlist[0],
-          best2: orderlist[1],
-          best3: orderlist[2],
-          best4: orderlist[3],
-          best5: orderlist[4],
-          best6: orderlist[5],
-          best7: orderlist[6],
-          best8: orderlist[7],
-          best9: orderlist[8],
-          best10: orderlist[9]
-        });
-      }}
-      value="Save"
-    />
-  );
 
   const newZipcode = (
     <input
@@ -361,14 +338,31 @@ function App() {
 
   const startButton = (
     <Button
+      disabled={tempzip.length !== 5}
       justify-self="center"
       size="lg"
       onClick={() => {
         handleUser();
         //handleZipcode();
+        setmyZip(tempzip);
+        const orderlist = artists;
+        setNewUser({
+          user_name: user,
+          zipcode: tempzip,
+          best1: orderlist[0],
+          best2: orderlist[1],
+          best3: orderlist[2],
+          best4: orderlist[3],
+          best5: orderlist[4],
+          best6: orderlist[5],
+          best7: orderlist[6],
+          best8: orderlist[7],
+          best9: orderlist[8],
+          best10: orderlist[9]
+        });
       }}
     >
-      Add yourself!
+      Add
     </Button>
   );
 
@@ -405,8 +399,7 @@ function App() {
       <img src={logo} className="App-logo" alt="logo" />
       {logged ? (
         <Area>
-          {newZipcode} {saveButton} {startButton} {deleteID} {deleteButton}{" "}
-          {userids}
+          {newZipcode} {startButton} {deleteID} {deleteButton} {userids}
           <Editor user={currentUser} complete={handleUser} />
         </Area>
       ) : (
