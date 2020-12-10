@@ -35,15 +35,15 @@ function App() {
   const [artists, setArtists] = useState([]);
   const [token, setToken] = useState("");
   const [users, setUsers] = useState([]);
-  //const [currentZipcodes, setZipcodes] = useState([]);
+  const [currentZipcodes, setZipcodes] = useState([]);
   const [myzip, setmyZip] = useState("");
   const [tempzip, settempZip] = useState(myzip ? myzip.tempzip : "");
   //const [tempzip, settempZip] = useState("");
   const [logged, setlogged]= useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [newUser, setNewUser]= useState(null);
-  const [deleted, setDeleted] = useState(0);
-
+  const [deleted, setDeleted] = useState(0); 
+  const [usernames, setUsernames] = useState([]); 
   useEffect(() => {
     let parsed = queryString.parse(window.location.search);
     let accessToken = parsed.access_token;
@@ -90,7 +90,7 @@ function App() {
 
     //user has spotify user id
     //artists has top 10 spotify artists
-  }, [token]);
+  }, [token, users]);
 
   const saveButton = (
     <input
@@ -112,7 +112,6 @@ function App() {
           best8: orderlist[7],
           best9: orderlist[8],
           best10: orderlist[9]});
-          console.log(newUser);
       }}
       
       value="Save"
@@ -133,7 +132,7 @@ function App() {
  //aplhabetical sort list of artists
  
 
-   
+  
   console.log(newUser);
   console.log(parseInt(myzip));
   //show the common artists and distance
@@ -142,7 +141,8 @@ function App() {
   //takes users database/array of user objects and maps to card with each info
   const userids = users.map(user => (
     <Card style={{ width: "100rem" }} key={user.user_name}>
-      <CardTitle> {user.user_name}</CardTitle>
+       <CardSubtitle> {user.id}</CardSubtitle>
+      <CardTitle> <a href={`https://open.spotify.com/user/${user.user_name}`}> {user.user_name} </a></CardTitle>
       <CardSubtitle> {user.zipcode}</CardSubtitle>
       <CardText> {user.best1}</CardText>
       <CardText> {user.best2}</CardText>
@@ -157,14 +157,20 @@ function App() {
     </Card>
   ));
 
+  const uniqueArr = [...new Set(userids)];
+  console.log(uniqueArr);
   
   const handleUser = () => {
        if (newUser) {
+      //console.log("is username here?", usernames.includes(newUser.user_name));
+
          //edit current user
-         if (currentUser) {
-           fetch(`/api/users/${currentUser.user_name}`, {
+    //const updatedArticle = { ...currentUser, ...newUser };
+    
+         if (currentUser && currentUser.user_name === newUser.user_name) {
+           fetch(`/api/users/${deleted}`, {
              method: 'PUT',
-             body: JSON.stringify({ ...currentUser, ...newUser }),
+             body: JSON.stringify({...currentUser, ...newUser}),
              headers: new Headers({ 'Content-type': 'application/json' })
            })
              .then(response => {
@@ -175,29 +181,19 @@ function App() {
              })
              .then(data => {
                setCurrentUser(data);
+                setDeleted(data.id);
                //this is where we decide to edit
                const alteredUsers = users.map(user => {
-                 if (user.user_name === data.user_name) {
-                   return data;
-                 }
-                 return user;
+                    return user.user_name === data.user_name
+                         ? data
+                          : user;
                });
+    
               setUsers(alteredUsers);
+              setUsernames(users.map(user=>user.user_name));
              })
              .catch(err => console.log(err));
          } else {
-      console.log(newUser);
-    /*const fakeUser = {user_name: "user",zipcode: "myzip",best1: "orderlist[0]",
-      best2: "orderlist[1]",
-      best3: "orderlist[2]",
-      best4: "orderlist[3]",
-      best5: "orderlist[4]",
-      best6: "orderlist[5]",
-      best7: "orderlist[6]",
-      best8: "orderlist[7]",
-      best9: "orderlist[8]",
-      best10: "orderlist[9]"
-    }; */
            fetch("/api/users", {
              //mode: 'no-cors',
              method: 'POST',
@@ -214,8 +210,10 @@ function App() {
              .then(data => {
                const alteredUsers = [...users, data];
                setUsers(alteredUsers);
-                console.log("usersss list:"+ users);
                setCurrentUser(newUser);
+                setDeleted(data.id);
+                setUsernames(users.map(user=>user.user_name));
+                setZipcodes(users.map(user=>[user.best1, user.best2]));
                
              })
              .catch(err => console.log(err));
@@ -226,9 +224,11 @@ function App() {
        setMode('view');
      };
 
-
-     console.log(currentUser);
-  
+console.log(currentZipcodes);
+console.log("currentUser", currentUser);
+console.log("newUser",newUser);
+console.log("usernames", usernames);
+     
      const deleteID = (
       <input
         type="text"
@@ -253,8 +253,8 @@ function App() {
       .catch((err) => console.error(err)); // eslint-disable-line no-console
       
      };    
-
-
+console.log("USERS after DELETE:");
+console.log(users);
   const startButton = (
     <Button
       justify-self="center"
@@ -276,7 +276,7 @@ function App() {
         handleDelete();
       }}
     >
-      Delete
+      Delete Yourself!
     </Button>
   );
 
@@ -295,12 +295,13 @@ function App() {
   }
 //<Area> {newZipcode}     {saveButton} {userids}  
 /**/
+
 return (
   <div className="App">
     <h1 className="App-title">Welcome to MASHED</h1>
     {logged ? 
     <Area>
-  {newZipcode} {saveButton} {userids} {startButton} {deleteID} {deleteButton}
+  {newZipcode} {saveButton} {startButton} {deleteID} {deleteButton} {uniqueArr} 
     <Editor user={currentUser} complete={handleUser} />
     </Area>
      :

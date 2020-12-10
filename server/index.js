@@ -16,6 +16,8 @@ Model.knex(knex);
 
 const app = express();
 
+//spotify api HTTP Requests
+
 const redirect_uri =
   process.env.REDIRECT_URI || "http://localhost:3001/callback";
 
@@ -59,6 +61,8 @@ app.get("/callback", function(req, res) {
   });
 });
 
+//users database HTTP Requests
+
 app.get("/api/users", (request, response, next) => {
   Users.query().then(users => {
     response.send(users);
@@ -78,11 +82,11 @@ app.post("/api/users", (request, response, next) => {
 app.put(
   '/api/users/:id',
   (request, response, next) => {
-    const {...updatedArticle } = {
+    const {...updatedUser } = {
       ...request.body
     }; // eslint-disable-line no-unused-vars
     Users.query()
-      .updateAndFetchById(request.params.user_name, updatedArticle)
+      .updateAndFetchById(request.params.id, updatedUser)
       .then((users) => {
         response.send(users);
       }, next);
@@ -98,6 +102,7 @@ app.delete(
       .then((result) => { 
         response.sendStatus(200);
       }, next);
+      
       console.log("request.params.id");
       console.log(request.params.id);
   }
