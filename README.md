@@ -10,7 +10,6 @@ view our website [here](https://wghirmai.github.io/cs701-mashed/)
 Run the following commands in your terminal:  
 % git clone https://github.com/wghirmai/cs701-mashed.git mashed  
 cd mashed  
-git switch almost  
 cd server   
 npm install  
 cd ..  
