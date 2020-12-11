@@ -2,13 +2,7 @@ import React, { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import "./App.css";
 
-import {
-  Card,
-  CardTitle,
-  CardText,
-  CardSubtitle,
-  Button
-} from "reactstrap";
+import { Card, CardTitle, CardText, CardSubtitle, Button } from "reactstrap";
 import queryString from "query-string";
 import "./App.css";
 import logo from "./Spotify_Icon_RGB_Green.png";
@@ -174,17 +168,19 @@ align-items: center;
   //console.log(user, users, artists);
   //takes users database/array of user objects and maps to card with each info
   //
-    function getArraysIntersection(a1,a2){
-     return  a1.filter(function(n) {return a2.indexOf(n) !== -1;});
+  function intersection(a1, a2) {
+    return a1.filter(function(n) {
+      return a2.indexOf(n) !== -1;
+    });
   }
-  //console.log(ourArtists.map(person=>getArraysIntersection(person,artists)));
+  //console.log(ourArtists.map(person=>intersection(person,artists)));
   console.log(zipcodes);
- //       if (getArraysIntersection([user.best1,user.best2,user.best3,user.best4,user.best5,user.best6,user.best7,user.best8,user.best9,user.best10], artists).length !==0)  
+  //       if (intersection([user.best1,user.best2,user.best3,user.best4,user.best5,user.best6,user.best7,user.best8,user.best9,user.best10], artists).length !==0)
 
   const userids = users
-  //.filter(person=>zipcodes!==null && zipcodes.includes(person.zipcode))
+    //.filter(person=>zipcodes!==null && zipcodes.includes(person.zipcode))
     //.filter(person=> person.zipcode==="05753" || person.zipcode==="05740" || person.zipcode==="91755")
-    //.filter(user=> getArraysIntersection(users.map(user=>{return user.best1,user.best2,user.best3,user.best4,user.best5,user.best6,user.best7,user.best8,user.best9,user.best10}),artists)!==[])
+    //.filter(user=> intersection(users.map(user=>{return user.best1,user.best2,user.best3,user.best4,user.best5,user.best6,user.best7,user.best8,user.best9,user.best10}),artists)!==[])
     .map(user => {
       {
         // if (
@@ -198,9 +194,24 @@ align-items: center;
         //   artists.includes(user.best8) ||
         //   artists.includes(user.best9) ||
         //   artists.includes(user.best10)
-        // ) 
-        if (getArraysIntersection([user.best1,user.best2,user.best3,user.best4,user.best5,user.best6,user.best7,user.best8,user.best9,user.best10], artists).length !==0)
-        {
+        // )
+        if (
+          intersection(
+            [
+              user.best1,
+              user.best2,
+              user.best3,
+              user.best4,
+              user.best5,
+              user.best6,
+              user.best7,
+              user.best8,
+              user.best9,
+              user.best10
+            ],
+            artists
+          ).length !== 0
+        ) {
           return (
             <Card
               style={{ width: "90%", margin: "0 auto" }}
@@ -214,7 +225,27 @@ align-items: center;
                 </a>
               </CardTitle>
               <CardSubtitle> {user.zipcode}</CardSubtitle>
-              <CardSubtitle> { (getArraysIntersection([user.best1,user.best2,user.best3,user.best4,user.best5,user.best6,user.best7,user.best8,user.best9,user.best10], artists).length/10 )*100 +"%" }</CardSubtitle>
+              <CardSubtitle>
+                {" "}
+                {(intersection(
+                  [
+                    user.best1,
+                    user.best2,
+                    user.best3,
+                    user.best4,
+                    user.best5,
+                    user.best6,
+                    user.best7,
+                    user.best8,
+                    user.best9,
+                    user.best10
+                  ],
+                  artists
+                ).length /
+                  10) *
+                  100 +
+                  "%"}
+              </CardSubtitle>
               <CardText> {user.best1}</CardText>
               <CardText> {user.best2}</CardText>
               <CardText> {user.best3}</CardText>
@@ -230,7 +261,6 @@ align-items: center;
         }
       }
     });
-
 
   const handleUser = () => {
     if (newUser) {
@@ -249,15 +279,12 @@ align-items: center;
           })
           .then(data => {
             setCurrentUser(data);
-            setDeleted(data.id);
-           //this is where we decide to edit
-           const alteredUsers = users.map(user => {
-                return user.user_name === data.user_name
-                     ? data
-                      : user;
-           });
-          setUsers(alteredUsers);
-         })
+            setDeleted(data.id); //this is where we decide to edit
+            const alteredUsers = users.map(user => {
+              return user.user_name === data.user_name ? data : user;
+            });
+            setUsers(alteredUsers);
+          })
           .catch(err => console.log(err));
       } else {
         fetch("/api/users", {
@@ -381,7 +408,7 @@ align-items: center;
 
   console.log("newUser", newUser);
   console.log("currentUser", currentUser);
-  console.log("users", users); 
+  console.log("users", users);
   console.log("userids", userids);
   return (
     <div className="App">
